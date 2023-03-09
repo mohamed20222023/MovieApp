@@ -1,0 +1,98 @@
+﻿@model MovieFormVM
+@{
+    ViewData["Title"] = "Movie Form";
+}
+
+<h2>@(Model.Id > 0 ? "Edit" : "Create") Movie</h2>
+<hr />
+
+<section class="row justify-content-between">
+    <div class="col-md-4">
+        <form method="post" asp-action="@(Model.Id > 0 ? "Edit" : "Create")" enctype="multipart/form-data">
+            <input asp-for="Id" type="hidden" />
+            <div class="form-grop mt-2">
+                <label class="text-muted" asp-for="Title"></label>
+                <input type="text" class="form-control" asp-for="Title" maxlength="250" />
+                <span class="text-danger" asp-validation-for="Title"></span>
+            </div>
+
+            <div class="form-grop mt-2">
+                <label class="text-muted" asp-for="GenreId"></label>
+                <select class="form-control" asp-for="GenreId" asp-items="@(new SelectList(Model.Genres , "Id" , "Name"))">
+                    <option></option>
+                </select>
+                <span class="text-danger" asp-validation-for="GenreId"></span>
+            </div>
+
+            <div class="form-grop mt-2 w-50">
+                <label class="text-muted" asp-for="Year"></label>
+                <input type="number" class="form-control" asp-for="Year" value="@(Model.Year > 0 ? Model.Year : string.Empty)"/>
+                <span class="text-danger" asp-validation-for="Year"></span>
+            </div>
+
+            <div class="form-grop mt-2 w-50">
+                <label class="text-muted" asp-for="Rate"></label>
+                <input type="number" class="form-control" asp-for="Rate" value="@(Model.Rate > 0 ? Model.Rate : string.Empty)" />
+                <span class="text-danger" asp-validation-for="Rate"></span>
+            </div>
+
+            <div class="form-grop mt-2">
+                <label class="text-muted" asp-for="Storyline"></label>
+                <textarea class="form-control" asp-for="Storyline" rows="4" maxlength="2500"></textarea>
+                <span class="text-danger" asp-validation-for="Storyline"></span>
+            </div>
+
+            <div class="mt-3 mb-3">
+                <input type="file" class="form-control" asp-for="Poster" accept=".png , .jpg">
+                <span class="text-danger" asp-validation-for="Poster"></span>
+            </div>
+
+
+            <input type="submit" class="btn btn-primary" value="Save"> </input>
+            <a class="btn btn-outline-secondary" asp-action="Index">
+                <i class="bi bi-x"></i>
+                Cancel
+            </a>
+        </form>
+    </div>
+
+    <div class="col-md-4">
+        <div class="d-none" id="poster-container">
+            @*<img src="@(Model.Id > 0 ? Model.PosterName : string.Empty)" alt="Poster" class="img-thumbnail" />*@
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('#Poster').on('change', function () {
+                var selectedFile = $(this).val().split('\\').pop();
+                $(this).siblings('label').text(selectedFile);
+
+                var posterContainer = $('#poster-container');
+                var image = window.URL.createObjectURL(this.files[0]);
+
+                posterContainer.removeClass('d-none');
+                posterContainer.find('img').attr('src', image);
+            });
+        });
+
+        $("#Year").datepicker({
+            format : 'yyyy',
+            viewMode : 'years',
+            minViewMode : 'years',
+            autoclose : true ,
+            startrDate : new Date('1950-01-01'),
+            endDate : new Date()
+
+
+        });
+
+       
+    </script>
+}
