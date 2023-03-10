@@ -5,8 +5,7 @@ The website allows users to browse , read and submit reviews, and rate movies. U
 
 The project includes the following features:
 
-- User registration and login using hashed passwords
-- Browsing and searching movies
+- Browsing movies
 - Submitting and reading movie reviews
 - Rating movies
 - Database operations using Entity Framework
